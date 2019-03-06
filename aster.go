@@ -1,37 +1,57 @@
 package main
 
 import (
-  "flag"
-  "go/ast"
-  "go/parser"
-  "go/token"
-  "os"
-  "reflect"
-  "log"
+	"flag"
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/token"
+	"log"
+	"os"
+	"path/filepath"
+	"reflect"
+	"regexp"
 )
 
-var(
-  pathVar string
+var (
+	rootPath string
+	pathList []string
 )
 
 func init() {
-	flag.StringVar(&pathVar, "path", "", "Must specify /Path")
+	flag.StringVar(&rootPath, "path", "", "Must specify /Path")
 	flag.Parse()
+}
+
+func visit(path string, f os.FileInfo, err error) error {
+	r, _ := regexp.Compile(`(^.*/\..*$)`)
+	if f.IsDir() {
+		match := r.MatchString(path)
+		if match != true {
+			fmt.Printf("%s\n", path)
+			return nil
+		}
+	}
+	return nil
 }
 
 func main() {
 	fset := token.NewFileSet()
 
+	if err := filepath.Walk(rootPath, visit); err != nil {
+		fmt.Printf("filepath.Walk() returned %v\n", err)
+	}
+
 	prse, err := parser.ParseDir(fset, pathVar, nil, 0)
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
-        for _, pkgItem := range prse {
-	        ast.Fprint(os.Stdout, fset, pkgItem, func(name string, value reflect.Value) bool {
-		        if ast.NotNilFilter(name, value) {
-			        return value.Type().String() != "*ast.Object"
-		        }
-		        return false
-	        })
+	for _, pkgItem := range prse {
+		ast.Fprint(os.Stdout, fset, pkgItem, func(name string, value reflect.Value) bool {
+			if ast.NotNilFilter(name, value) {
+				return value.Type().String() != "*ast.Object"
+			}
+			return false
+		})
 	}
 }
