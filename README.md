@@ -21,5 +21,11 @@ Golang Struct Relation Diagram
 ## Release Requirements
 
 - alpha-0.1.0:
-    - [ ] No bugs in running code
+    - [x] No bugs in running code
     - [x] Above labeled to-do's finished
+
+## Build
+
+```bash
+go build -o ./bin/gophermap
+```
