@@ -16,3 +16,6 @@ type mixed struct {
 	obj1 *test
 	obj2 *math
 }
+
+type empty struct {
+}
