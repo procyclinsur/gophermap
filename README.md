@@ -3,26 +3,25 @@ Golang Struct Relation Diagram
 
 ## To-Do
 
-- [x] find paths in directory (paths.go)  `alpha-0.1.0 release`
-- [x] display ast document for debug (aster.go)  `alpha-0.1.0 release`
-    - [x] single-file  `alpha-0.1.0 release`
-    - [x] git directory  `alpha-0.1.0 release`
-    - [x] integrate paths.go code  `alpha-0.1.0 release`
-- [ ] walk ast document for files in dir for structs and create config (main.go)
-    - [x] top-level structs `alpha-0.1.0 release`
-    - [ ] based on package type
-    - [ ] structs from other locations
-    - [ ] exclude golang test files
-    - [x] integrate paths.go code  `alpha-0.1.0 release`
-    - [x] integrate aster.go debug code  `alpha-0.1.0 release`
-    - [ ] Create inter struct relations
-- [ ] use config to genereate graph
+- [ ] walk ast doc for structs in files from dir and create config file `alpha-0.?.?`
+    - [ ] create dry-run flag (generate txt output)
+        - [ ] refine text output `alpha-0.1.?`
+        - [ ] create flag `alpha-0.1.1`
+        - [ ] create logic for flag `alpha-0.1.?`
+    - [ ] based on package type `alpha-0.1.?`
+    - [ ] output to config file (graphviz?) `alpha-0.1.?`
+        - [ ] decide on graphing library
+    - [ ] structs from other locations `alpha-0.1.1`
+    - [ ] exclude golang test files `alpha-0.1.1`
+    - [ ] create inter struct relations map `alpha-0.1.1`
+    - [ ] decode parameter type names `alpha-0.1.1`
+- [ ] use config to genereate graph  `beta-0.?.?`
 
 ## Release Requirements
 
-- alpha-0.1.0:
-    - [x] No bugs in running code
-    - [x] Above labeled to-do's finished
+- alpha-0.1.1:
+    - [ ] No bugs in running code
+    - [ ] Above labeled to-do's finished
 
 ## Build
 
