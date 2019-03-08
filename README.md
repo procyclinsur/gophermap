@@ -15,6 +15,7 @@ Golang Struct Relation Diagram
     - [x] exclude golang test files `alpha-0.1.1`
     - [ ] create inter struct relations map `alpha-0.1.1`
     - [ ] decode parameter type names `alpha-0.1.1`
+    - [ ] implement zap logger `alpha-0.1.1`
 - [ ] use config to genereate graph  `beta-0.?.?`
 
 ## Release Requirements
