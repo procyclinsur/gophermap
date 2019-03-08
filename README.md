@@ -17,6 +17,7 @@ Golang Struct Relation Diagram
     - [x] decode parameter type names `alpha-0.1.1`
     - [ ] implement zap logger `alpha-0.1.1`
 - [ ] use config to genereate graph  `beta-0.?.?`
+- [x] add usage instructions `alpha-0.1.1`
 
 ## Release Requirements
 
@@ -28,4 +29,16 @@ Golang Struct Relation Diagram
 
 ```bash
 go build -o ./bin/gophermap
+```
+
+## Usage
+
+Print structs + struct properties from all files in a project directory.
+```bash
+./bin/gophermap -path <path-to-project> -astdebug=false
+```
+
+Print ast file for debugging.
+```bash
+./bin/gophermap -path <path-to-project> -astdebug=true
 ```
