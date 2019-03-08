@@ -53,8 +53,8 @@ func main() {
 
 func parseDirFiles(f *token.FileSet) {
 	for _, pathVar := range pathList {
-		// fmt.Println("DEBUG: ", pathVar)
-		prse, err := parser.ParseDir(f, pathVar, nil, 0)
+		//fmt.Println("DEBUG: ", pathVar)
+		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
 			log.Fatal("Error: ", err)
 		}
@@ -67,7 +67,7 @@ func parseDirFiles(f *token.FileSet) {
 func debugParseDirFiles(f *token.FileSet) {
 	for _, pathVar := range pathList {
 		// fmt.Println("DEBUG: ", pathVar)
-		prse, err := parser.ParseDir(f, pathVar, nil, 0)
+		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
 			log.Fatal("Error: ", err)
 		}

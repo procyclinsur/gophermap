@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 func getPathList(path string, walkFN filepath.WalkFunc) error {
@@ -23,4 +25,15 @@ func visit(path string, f os.FileInfo, err error) error {
 		}
 	}
 	return nil
+}
+
+func fileFilter(f os.FileInfo) (rtrn bool) {
+	match := strings.Contains(f.Name(), "test.go")
+	if match != true {
+		rtrn = true
+	} else {
+		rtrn = false
+	}
+	fmt.Printf("%s : %t\n", f.Name(), rtrn)
+	return rtrn
 }

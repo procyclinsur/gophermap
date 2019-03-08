@@ -12,7 +12,7 @@ Golang Struct Relation Diagram
     - [ ] output to config file (graphviz?) `alpha-0.1.?`
         - [ ] decide on graphing library
     - [ ] structs from other locations `alpha-0.1.1`
-    - [ ] exclude golang test files `alpha-0.1.1`
+    - [x] exclude golang test files `alpha-0.1.1`
     - [ ] create inter struct relations map `alpha-0.1.1`
     - [ ] decode parameter type names `alpha-0.1.1`
 - [ ] use config to genereate graph  `beta-0.?.?`
