@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -34,6 +33,6 @@ func fileFilter(f os.FileInfo) (rtrn bool) {
 	} else {
 		rtrn = false
 	}
-	fmt.Printf("%s : %t\n", f.Name(), rtrn)
+	//fmt.Printf("%s : %t\n", f.Name(), rtrn)
 	return rtrn
 }
