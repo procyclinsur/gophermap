@@ -60,7 +60,7 @@ func walkStructSpec(n *ast.TypeSpec) ast.Visitor {
 						xxName = x.Name
 					}
 				}
-				fType = xxName + "." + xSel
+				fType = "*" + xxName + "." + xSel
 			case *ast.Ident:
 				fType = s.Name
 			}
