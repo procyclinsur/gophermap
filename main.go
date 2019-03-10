@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -11,17 +10,23 @@ import (
 	"reflect"
 
 	"github.com/davecgh/go-spew/spew"
+	flags "github.com/jessevdk/go-flags"
 )
 
 var (
-	//fileVar string
-	rootPath  string
-	pathList  []string
-	astDebug  bool
+	opts      Options
 	fset      *token.FileSet
+	pathList  []string
 	structMap map[string]StructDef
 	//debug bool
 )
+
+//Options : Command Line Options
+type Options struct {
+	Path     string `short:"p" long:"path" description:"Project directory path" required:"true"`
+	AstDebug bool   `short:"a" long:"astdebug" description:"Print AST file"`
+	HelpFlag bool   `short:"h" long:"help" description:"Print this help message"`
+}
 
 //StructDef v1.0
 type StructDef struct {
@@ -34,26 +39,34 @@ type StructDef struct {
 }
 
 func init() {
-	//flag.StringVar(&fileVar, "file", "", "Must specify /Path/file")
-	flag.StringVar(&rootPath, "path", "", "Must specify /Path")
-	flag.BoolVar(&astDebug, "astdebug", false, "For AST output set to true.")
-	flag.Parse()
+	prsr := flags.NewParser(&opts, flags.Default)
+	if _, err := prsr.Parse(); err != nil {
+		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.ErrHelp {
+			panic("Input required parameters.")
+		} else {
+			errMsg := fmt.Sprintf("%s\n\tUse the -h or --help flag for more options.", err)
+			panic(errMsg)
+		}
+
+	} else if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	if err := getPathList(rootPath, visit); err != nil {
+	if err := getPathList(opts.Path, visit); err != nil {
 		fmt.Printf("filepath.Walk() returned %v\n", err)
 	}
 
 	fset = token.NewFileSet()
 	structMap = make(map[string]StructDef)
 
-	if astDebug != true {
+	if opts.AstDebug != true {
 		parseDirFiles(fset)
+		spew.Dump(structMap)
 	} else {
 		debugParseDirFiles(fset)
 	}
-	spew.Dump(structMap)
 }
 
 func parseDirFiles(f *token.FileSet) {
