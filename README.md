@@ -11,9 +11,10 @@ Golang Struct Relation Diagram
     - [ ] based on package type `alpha-0.1.?`
     - [ ] output to config file (graphviz?) `alpha-0.1.?`
         - [ ] decide on graphing library
-    - [ ] structs from other locations `alpha-0.1.1`
+    - [ ] structs from other locations `alpha-0.1.2`
     - [x] exclude golang test files `alpha-0.1.1`
     - [ ] create inter struct relations map `alpha-0.1.1`
+    - [x] organize data into structs `alpha-0.1.1`
     - [x] decode parameter type names `alpha-0.1.1`
     - [ ] implement zap logger `alpha-0.1.1`
 - [ ] use config to genereate graph  `beta-0.?.?`
