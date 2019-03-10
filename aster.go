@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/token"
 )
@@ -29,25 +28,22 @@ func FindTypes(n ast.Node) ast.Visitor {
 }
 
 func fieldNameNilString(n []*ast.Ident) (fName string) {
-	if n != nil {
-		fName = n[0].Name
-	} else {
-		fName = "nil"
-	}
+
 	return fName
 }
 
 func walkStructSpec(n *ast.TypeSpec) ast.Visitor {
 	switch v := n.Type.(type) {
 	case *ast.StructType:
-		npos := fset.Position(n.Name.Pos())
-		fmt.Println("----")
-		fmt.Printf("line/%d ", npos.Line)
-		fmt.Printf("struct:%s\n", n.Name.Name)
-		for index, item := range v.Fields.List {
-			vpos := fset.Position(v.Fields.Pos())
-			fName := fieldNameNilString(item.Names)
-			var fType string
+		structMap[n.Name.Name] = StructDef{
+			n.Name.Name,
+			map[string]string{},
+			[]string{},
+		}
+
+		for _, item := range v.Fields.List {
+			var fieldType string
+			var fieldName string
 			var xSel string
 			var xxName string
 			switch s := item.Type.(type) {
@@ -60,15 +56,16 @@ func walkStructSpec(n *ast.TypeSpec) ast.Visitor {
 						xxName = x.Name
 					}
 				}
-				fType = "*" + xxName + "." + xSel
+				fieldType = "*" + xxName + "." + xSel
 			case *ast.Ident:
-				fType = s.Name
+				fieldType = s.Name
 			}
-			fmt.Printf("line:%d ", vpos.Line)
-			fmt.Printf("char:%d ", vpos.Column)
-			fmt.Printf("index:%d ", index)
-			fmt.Printf("parm:%s ", fName)
-			fmt.Printf("type:%s\n", fType)
+			if item.Names != nil {
+				fieldName = item.Names[0].Name
+			} else {
+				fieldName = fieldType
+			}
+			structMap[n.Name.Name].Properties[fieldName] = fieldType
 		}
 		return VisitorFunc(FindTypes)
 	}

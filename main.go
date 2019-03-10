@@ -9,14 +9,17 @@ import (
 	"log"
 	"os"
 	"reflect"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 var (
 	//fileVar string
-	rootPath string
-	pathList []string
-	astDebug bool
-	fset     *token.FileSet
+	rootPath  string
+	pathList  []string
+	astDebug  bool
+	fset      *token.FileSet
+	structMap map[string]StructDef
 	//debug bool
 )
 
@@ -43,12 +46,14 @@ func main() {
 	}
 
 	fset = token.NewFileSet()
+	structMap = make(map[string]StructDef)
 
 	if astDebug != true {
 		parseDirFiles(fset)
 	} else {
 		debugParseDirFiles(fset)
 	}
+	spew.Dump(structMap)
 }
 
 func parseDirFiles(f *token.FileSet) {
