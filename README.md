@@ -16,6 +16,7 @@ Golang Struct Relation Diagram
     - [ ] create inter struct relations map `alpha-0.1.1`
     - [x] organize data into structs `alpha-0.1.1`
     - [x] decode parameter type names `alpha-0.1.1`
+    - [x] changed flag parser to require arguments `alpha-0.1.1`
     - [ ] implement zap logger `alpha-0.1.1`
 - [ ] use config to genereate graph  `beta-0.?.?`
 - [x] add usage instructions `alpha-0.1.1`
