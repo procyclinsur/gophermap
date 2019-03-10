@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"github.com/davecgh/go-spew/spew"
+)
 
 type test struct {
 	a string
@@ -49,7 +51,7 @@ func main() {
 	var struct2 structMap
 	struct2.StructList = make(map[string]StructDef)
 	struct2.StructList["fakeStruct1"] = struct1
-	fmt.Println(struct2)
+	spew.Dump(struct2)
 	struct3 := StructDef{
 		"fakeStruct2",
 		map[string]string{
@@ -60,7 +62,7 @@ func main() {
 		[]string{"math", "empty"},
 	}
 	struct2.StructList["fakeStruct2"] = struct3
-	fmt.Println(struct2)
+	spew.Dump(struct2)
 }
 
 //{
