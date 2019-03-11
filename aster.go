@@ -61,10 +61,10 @@ func walkStructSpec(n *ast.TypeSpec) ast.Visitor {
 		for _, item := range v.Fields.List {
 			var fieldType string
 			var fieldName string
-			var xSel string
-			var xxName string
 			switch s := item.Type.(type) {
 			case *ast.StarExpr:
+				var xSel string
+				var xxName string
 				switch p := s.X.(type) {
 				case *ast.SelectorExpr:
 					xSel = p.Sel.Name
@@ -74,6 +74,18 @@ func walkStructSpec(n *ast.TypeSpec) ast.Visitor {
 					}
 				}
 				fieldType = "*" + xxName + "." + xSel
+			case *ast.MapType:
+				var mKey string
+				var mVal string
+				switch k := s.Key.(type) {
+				case *ast.Ident:
+					mKey = k.Name
+				}
+				switch v := s.Value.(type) {
+				case *ast.Ident:
+					mVal = v.Name
+				}
+				fieldType = "map[" + mKey + "]" + mVal
 			case *ast.Ident:
 				fieldType = s.Name
 			}
