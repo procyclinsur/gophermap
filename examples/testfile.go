@@ -64,31 +64,3 @@ func main() {
 	struct2.StructList["fakeStruct2"] = struct3
 	spew.Dump(struct2)
 }
-
-//{
-//	map[
-//	        fakeStruct1:{
-//			fakeStruct1
-//			map[
-//			        fakeProperty1:int
-//				fakeProperty2:string
-//				fakeProperty3:mixed
-//			]
-//			[
-//			        mixed
-//			]
-//		}
-//		fakeStruct2:{
-//			fakeStruct2
-//			map[
-//			        fakeProperty1:float32
-//				fakeProperty2:math
-//				fakeProperty3:empty
-//			]
-//			[
-//			        math
-//				empty
-//			]
-//		}
-//	]
-//}

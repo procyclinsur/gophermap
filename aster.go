@@ -5,12 +5,34 @@ import (
 	"go/token"
 )
 
+var structMap = StructMap{}
+
+//StructMap v1.0
+type StructMap map[string]StructDef
+
+//StructDef v1.0
+type StructDef struct {
+	//Name of struct
+	Name string
+	//Map of property-name:property-type
+	Properties map[string]string
+	//List of structs contained
+	Contains []string
+}
+
+//VisitorFunc function v1.0
 type VisitorFunc func(n ast.Node) ast.Visitor
 
+//Visit function v1.0
 func (f VisitorFunc) Visit(n ast.Node) ast.Visitor {
 	return f(n)
 }
 
+func getStructMap() StructMap {
+	return structMap
+}
+
+//FindTypes function v1.0
 func FindTypes(n ast.Node) ast.Visitor {
 	switch n := n.(type) {
 	case *ast.Package:
@@ -25,11 +47,6 @@ func FindTypes(n ast.Node) ast.Visitor {
 		return walkStructSpec(n)
 	}
 	return nil
-}
-
-func fieldNameNilString(n []*ast.Ident) (fName string) {
-
-	return fName
 }
 
 func walkStructSpec(n *ast.TypeSpec) ast.Visitor {

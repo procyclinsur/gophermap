@@ -14,10 +14,9 @@ import (
 )
 
 var (
-	opts      Options
-	fset      *token.FileSet
-	pathList  []string
-	structMap map[string]StructDef
+	opts     Options
+	fset     *token.FileSet
+	pathList []string
 	//debug bool
 )
 
@@ -26,16 +25,6 @@ type Options struct {
 	Path     string `short:"p" long:"path" description:"Project directory path" required:"true"`
 	AstDebug bool   `short:"a" long:"astdebug" description:"Print AST file"`
 	HelpFlag bool   `short:"h" long:"help" description:"Print this help message"`
-}
-
-//StructDef v1.0
-type StructDef struct {
-	//Name of struct
-	Name string
-	//Map of property-name:property-type
-	Properties map[string]string
-	//List of structs contained
-	Contains []string
 }
 
 func init() {
@@ -59,19 +48,21 @@ func main() {
 	}
 
 	fset = token.NewFileSet()
-	structMap = make(map[string]StructDef)
 
 	if opts.AstDebug != true {
-		parseDirFiles(fset)
-		spew.Dump(structMap)
+		sm := parseDirFiles(fset)
+		rl := relationMapper(sm)
+		fmt.Println("#####STRUCT_DEFS#####")
+		spew.Dump(sm)
+		fmt.Println("####RELATIONSHIPS####")
+		spew.Dump(rl)
 	} else {
 		debugParseDirFiles(fset)
 	}
 }
 
-func parseDirFiles(f *token.FileSet) {
+func parseDirFiles(f *token.FileSet) StructMap {
 	for _, pathVar := range pathList {
-		//fmt.Println("DEBUG: ", pathVar)
 		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
 			log.Fatal("Error: ", err)
@@ -80,11 +71,11 @@ func parseDirFiles(f *token.FileSet) {
 			ast.Walk(VisitorFunc(FindTypes), pkgItem)
 		}
 	}
+	return getStructMap()
 }
 
 func debugParseDirFiles(f *token.FileSet) {
 	for _, pathVar := range pathList {
-		// fmt.Println("DEBUG: ", pathVar)
 		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
 			log.Fatal("Error: ", err)
