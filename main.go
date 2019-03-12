@@ -50,10 +50,12 @@ func main() {
 	fset = token.NewFileSet()
 
 	if opts.AstDebug != true {
-		sm := parseDirFiles(fset)
+		tl, sm := parseDirFiles(fset)
 		rl := relationMapper(sm)
 		fmt.Println("#####STRUCT_DEFS#####")
 		spew.Dump(sm)
+		fmt.Println("######TYPE_LIST######")
+		spew.Dump(tl)
 		fmt.Println("####RELATIONSHIPS####")
 		spew.Dump(rl)
 	} else {
@@ -61,7 +63,7 @@ func main() {
 	}
 }
 
-func parseDirFiles(f *token.FileSet) StructMap {
+func parseDirFiles(f *token.FileSet) (TypeList, StructMap) {
 	for _, pathVar := range pathList {
 		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
@@ -71,7 +73,7 @@ func parseDirFiles(f *token.FileSet) StructMap {
 			ast.Walk(VisitorFunc(FindTypes), pkgItem)
 		}
 	}
-	return getStructMap()
+	return getWalkOutput()
 }
 
 func debugParseDirFiles(f *token.FileSet) {

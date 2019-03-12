@@ -16,7 +16,7 @@ Golang Struct Relation Diagram
     - [ ] create inter struct relations map `alpha-0.1.1`
         - [x] internal structs
         - [ ] external structs
-            - [ ] create a list of types using `*ast.TypeSpec` `alpha-0.1.1`
+            - [x] create a list of types using `*ast.TypeSpec` `alpha-0.1.1`
                 - break walkStructSpec into walkTypeSpec and walkStructSpec
                 - parse all types into list for reference by relations.go
             - [ ] parse external stucts on ?(StarExpr)
