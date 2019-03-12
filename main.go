@@ -51,13 +51,14 @@ func main() {
 
 	if opts.AstDebug != true {
 		tl, sm := parseDirFiles(fset)
-		rl := relationMapper(sm)
+		rl := relationMapper(sm, tl)
 		fmt.Println("#####STRUCT_DEFS#####")
 		spew.Dump(sm)
 		fmt.Println("######TYPE_LIST######")
 		spew.Dump(tl)
 		fmt.Println("####RELATIONSHIPS####")
 		spew.Dump(rl)
+		//_ = rl
 	} else {
 		debugParseDirFiles(fset)
 	}
