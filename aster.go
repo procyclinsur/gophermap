@@ -1,17 +1,44 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/token"
 )
 
+var structMap = StructMap{}
+var typeList = TypeList{}
+
+//TypeList v1.0
+type TypeList []string
+
+//StructMap v1.0
+type StructMap map[string]StructDef
+
+//StructDef v1.0
+type StructDef struct {
+	//Name of struct
+	Name string
+	//Map of property-name:property-type
+	Properties map[string]string
+	//List of structs contained
+	Contains []string
+}
+
+//VisitorFunc function v1.0
 type VisitorFunc func(n ast.Node) ast.Visitor
 
+//Visit function v1.0
 func (f VisitorFunc) Visit(n ast.Node) ast.Visitor {
 	return f(n)
 }
 
+func getWalkOutput() (tl TypeList, sm StructMap) {
+	tl = typeList
+	sm = structMap
+	return
+}
+
+//FindTypes function v1.0
 func FindTypes(n ast.Node) ast.Visitor {
 	switch n := n.(type) {
 	case *ast.Package:
@@ -23,28 +50,63 @@ func FindTypes(n ast.Node) ast.Visitor {
 			return VisitorFunc(FindTypes)
 		}
 	case *ast.TypeSpec:
-		switch v := n.Type.(type) {
-		case *ast.StructType:
-			npos := fset.Position(n.Name.Pos())
-			fmt.Println("----")
-			fmt.Printf("line/%d ", npos.Line)
-			fmt.Printf("struct:%s\n", n.Name.Name)
-			for index, item := range v.Fields.List {
-				var fName string
-				if item.Names != nil {
-					fName = item.Names[0].Name
-				} else {
-					fName = "nil"
-				}
-				vpos := fset.Position(v.Fields.Pos())
-				fmt.Printf("line:%d ", vpos.Line)
-				fmt.Printf("char:%d ", vpos.Column)
-				fmt.Printf("index:%d ", index)
-				fmt.Printf("parm:%s ", fName)
-				fmt.Printf("type:%s\n", item.Type)
-			}
-			return VisitorFunc(FindTypes)
-		}
+		return walkTypeSpec(n)
 	}
 	return nil
+}
+
+func walkTypeSpec(n *ast.TypeSpec) ast.Visitor {
+	typeList = append(typeList, n.Name.Name)
+	switch v := n.Type.(type) {
+	case *ast.StructType:
+		return walkStructSpec(n, v)
+	}
+	return nil
+}
+
+func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
+	structMap[n.Name.Name] = StructDef{
+		n.Name.Name,
+		map[string]string{},
+		[]string{},
+	}
+	for _, item := range v.Fields.List {
+		var fieldType string
+		var fieldName string
+		switch s := item.Type.(type) {
+		case *ast.StarExpr:
+			var xSel string
+			var xxName string
+			switch p := s.X.(type) {
+			case *ast.SelectorExpr:
+				xSel = p.Sel.Name
+				switch x := p.X.(type) {
+				case *ast.Ident:
+					xxName = x.Name
+				}
+			}
+			fieldType = "*" + xxName + "." + xSel
+		case *ast.MapType:
+			var mKey string
+			var mVal string
+			switch k := s.Key.(type) {
+			case *ast.Ident:
+				mKey = k.Name
+			}
+			switch v := s.Value.(type) {
+			case *ast.Ident:
+				mVal = v.Name
+			}
+			fieldType = "map[" + mKey + "]" + mVal
+		case *ast.Ident:
+			fieldType = s.Name
+		}
+		if item.Names != nil {
+			fieldName = item.Names[0].Name
+		} else {
+			fieldName = fieldType
+		}
+		structMap[n.Name.Name].Properties[fieldName] = fieldType
+	}
+	return VisitorFunc(FindTypes)
 }
