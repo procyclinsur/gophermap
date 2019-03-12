@@ -26,7 +26,7 @@ Golang Struct Relation Diagram
     - [x] changed flag parser to require arguments `alpha-0.1.1`
     - [x] need to parse for `*ast.MapType` on parameter values `alpha-0.1.1`
         - `./bin/gophermap -p ../../atp/line-sender/ -a | grep -C 30 words | head -60`
-    - [ ] implement zap logger `alpha-0.1.1`
+    - [ ] implement zap logger `alpha-0.1.2`
 - [ ] use config to genereate graph  `beta-0.?.?`
 - [x] add usage instructions `alpha-0.1.1`
 
