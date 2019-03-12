@@ -45,10 +45,10 @@ go build -o ./bin/gophermap
 
 Print structs + struct properties from all files in a project directory.
 ```bash
-./bin/gophermap -path <path-to-project> -astdebug=false
+./bin/gophermap -p <path-to-project>
 ```
 
 Print ast file for debugging.
 ```bash
-./bin/gophermap -path <path-to-project> -astdebug=true
+./bin/gophermap -p <path-to-project> -a
 ```
