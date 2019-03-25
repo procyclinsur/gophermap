@@ -107,32 +107,25 @@ func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
 	return VisitorFunc(FindTypes)
 }
 
-func getAstStarExpr(s *ast.StarExpr) string {
-	var Sel string
-	var Name string
+func getAstStarExpr(s *ast.StarExpr) (rv string) {
 	switch se := s.X.(type) {
 	case *ast.SelectorExpr:
-		Sel = se.Sel.Name
-		switch ne := se.X.(type) {
-		case *ast.Ident:
-			Name = getAstIdent(ne)
-		}
+		rv = "*" + getAstSelectorExpr(se)
 	}
-	return "*" + Name + "." + Sel
+	return
 }
 
-func getAstMapType(s *ast.MapType) string {
+func getAstMapType(s *ast.MapType) (rv string) {
 	var mKey string
-	var mVal string
 	switch mtk := s.Key.(type) {
 	case *ast.Ident:
 		mKey = getAstIdent(mtk)
 	}
 	switch mtv := s.Value.(type) {
 	case *ast.Ident:
-		mVal = getAstIdent(mtv)
+		rv = "map[" + mKey + "]" + getAstIdent(mtv)
 	}
-	return "map[" + mKey + "]" + mVal
+	return
 }
 
 func getAstArrayType(s *ast.ArrayType) (rv string) {
@@ -145,9 +138,9 @@ func getAstArrayType(s *ast.ArrayType) (rv string) {
 
 func getAstSelectorExpr(s *ast.SelectorExpr) (rv string) {
 	Sel := s.Sel.Name
-	switch sele := s.X.(type) {
+	switch se := s.X.(type) {
 	case *ast.Ident:
-		rv = sele.Name + "." + Sel
+		rv = se.Name + "." + Sel
 	}
 	return
 }
