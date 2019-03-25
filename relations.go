@@ -19,11 +19,12 @@ func relationMapper(sm StructMap, tl TypeList) RelationList {
 	var relationList = RelationList{}
 	for ps := range sm {
 		var ptList []string
-		for _, ppt := range sm[ps].Properties {
-			//old := string(ppt[0])
-			//new := strings.ToUpper(old)
-			//appt := strings.Replace(ppt, old, new, 1)
+		sugar.Debugf("Parent Struct: %s", ps)
+		for ppn, ppt := range sm[ps].Properties {
+			sugar.Debugf("    Checking Property: %s", ppn)
+			sugar.Debugf("        Type: %s", ppt)
 			if child, ok := apptInTypeList(ppt, tl); ok != false {
+				sugar.Debugf("            Type '%s' matches requirement adding to list", ppt)
 				ptList = append(ptList, child)
 			}
 		}

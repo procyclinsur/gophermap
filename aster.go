@@ -59,6 +59,7 @@ func walkTypeSpec(n *ast.TypeSpec) ast.Visitor {
 	typeList = append(typeList, n.Name.Name)
 	switch v := n.Type.(type) {
 	case *ast.StructType:
+		sugar.Debugf("Struct: %s", n.Name.Name)
 		return walkStructSpec(n, v)
 	}
 	return nil
@@ -71,42 +72,86 @@ func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
 		[]string{},
 	}
 	for _, item := range v.Fields.List {
-		var fieldType string
 		var fieldName string
-		switch s := item.Type.(type) {
-		case *ast.StarExpr:
-			var xSel string
-			var xxName string
-			switch p := s.X.(type) {
-			case *ast.SelectorExpr:
-				xSel = p.Sel.Name
-				switch x := p.X.(type) {
-				case *ast.Ident:
-					xxName = x.Name
-				}
-			}
-			fieldType = "*" + xxName + "." + xSel
-		case *ast.MapType:
-			var mKey string
-			var mVal string
-			switch k := s.Key.(type) {
-			case *ast.Ident:
-				mKey = k.Name
-			}
-			switch v := s.Value.(type) {
-			case *ast.Ident:
-				mVal = v.Name
-			}
-			fieldType = "map[" + mKey + "]" + mVal
-		case *ast.Ident:
-			fieldType = s.Name
-		}
 		if item.Names != nil {
 			fieldName = item.Names[0].Name
 		} else {
+			fieldName = ""
+		}
+
+		sugar.Debugf("    Field: %s", fieldName)
+
+		var fieldType string
+
+		switch s := item.Type.(type) {
+		case *ast.StarExpr:
+			fieldType = getAstStarExpr(s)
+		case *ast.MapType:
+			fieldType = getAstMapType(s)
+		case *ast.ArrayType:
+			fieldType = getAstArrayType(s)
+		case *ast.SelectorExpr:
+			fieldType = getAstSelectorExpr(s)
+		case *ast.Ident:
+			fieldType = getAstIdent(s)
+		}
+
+		sugar.Debugf("        Type: %s", fieldType)
+
+		if fieldName == "" {
 			fieldName = fieldType
 		}
+
 		structMap[n.Name.Name].Properties[fieldName] = fieldType
 	}
 	return VisitorFunc(FindTypes)
+}
+
+func getAstStarExpr(s *ast.StarExpr) string {
+	var Sel string
+	var Name string
+	switch se := s.X.(type) {
+	case *ast.SelectorExpr:
+		Sel = se.Sel.Name
+		switch ne := se.X.(type) {
+		case *ast.Ident:
+			Name = getAstIdent(ne)
+		}
+	}
+	return "*" + Name + "." + Sel
+}
+
+func getAstMapType(s *ast.MapType) string {
+	var mKey string
+	var mVal string
+	switch mtk := s.Key.(type) {
+	case *ast.Ident:
+		mKey = getAstIdent(mtk)
+	}
+	switch mtv := s.Value.(type) {
+	case *ast.Ident:
+		mVal = getAstIdent(mtv)
+	}
+	return "map[" + mKey + "]" + mVal
+}
+
+func getAstArrayType(s *ast.ArrayType) (rv string) {
+	switch at := s.Elt.(type) {
+	case *ast.Ident:
+		rv = getAstIdent(at)
+	}
+	return
+}
+
+func getAstSelectorExpr(s *ast.SelectorExpr) (rv string) {
+	Sel := s.Sel.Name
+	switch sele := s.X.(type) {
+	case *ast.Ident:
+		rv = sele.Name + "." + Sel
+	}
+	return
+}
+
+func getAstIdent(s *ast.Ident) string {
+	return s.Name
 }
