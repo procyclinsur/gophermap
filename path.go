@@ -33,6 +33,6 @@ func fileFilter(f os.FileInfo) (rtrn bool) {
 	} else {
 		rtrn = false
 	}
-	//fmt.Printf("%s : %t\n", f.Name(), rtrn)
+	sugar.Debugf("%s : %t\n", f.Name(), rtrn)
 	return rtrn
 }
