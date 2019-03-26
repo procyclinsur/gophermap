@@ -12,25 +12,13 @@ Golang Struct Relation Diagram
     - [ ] output to config file (graphviz?) `alpha-0.1.?`
         - [ ] decide on graphing library
     - [ ] structs from other locations `alpha-0.1.?`
-    - [x] exclude golang test files `alpha-0.1.1`
-    - [x] create inter struct relations map `alpha-0.1.1`
-        - [x] internal structs
-        - [x] external structs
-            - [x] create a list of types using `*ast.TypeSpec` `alpha-0.1.1`
-                - break walkStructSpec into walkTypeSpec and walkStructSpec
-                - parse all types into list for reference by relations.go
-            - [x] parse external stucts on ?(StarExpr)
     - [ ] allow external non StarExpr types to be recognized `alpha-0.1.2`
-    - [x] organize data into structs `alpha-0.1.1`
-    - [x] decode parameter type names `alpha-0.1.1`
-    - [x] changed flag parser to require arguments `alpha-0.1.1`
-    - [x] need to parse for `*ast.MapType` on parameter values `alpha-0.1.1`
-        - `./bin/gophermap -p ../../atp/line-sender/ -a | grep -C 30 words | head -60`
     - [x] implement zap logger `alpha-0.1.2`
 - [ ] use config to genereate graph  `beta-0.?.?`
-- [x] add usage instructions `alpha-0.1.1`
-- [ ] add \*ast.FuncType and \*ast.SelectorExpr to aster.go `alpha-0.1.2`
+- [x] add \*ast.FuncType and \*ast.SelectorExpr to aster.go `alpha-0.1.2`
 - [x] refactor processing for aster.go case statements to 'fieldType = someFunction(inputs)' `alpha-0.1.2`
+- [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
+- [ ] fix getAstMapType to support all types for mtv `alpha-0.1.2`
 
 ## Release Requirements
 

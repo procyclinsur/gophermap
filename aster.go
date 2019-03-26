@@ -3,6 +3,7 @@ package main
 import (
 	"go/ast"
 	"go/token"
+	"strings"
 )
 
 var structMap = StructMap{}
@@ -73,28 +74,14 @@ func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
 	}
 	for _, item := range v.Fields.List {
 		var fieldName string
+
 		if item.Names != nil {
 			fieldName = item.Names[0].Name
-		} else {
-			fieldName = ""
 		}
 
 		sugar.Debugf("    Field: %s", fieldName)
 
-		var fieldType string
-
-		switch s := item.Type.(type) {
-		case *ast.StarExpr:
-			fieldType = getAstStarExpr(s)
-		case *ast.MapType:
-			fieldType = getAstMapType(s)
-		case *ast.ArrayType:
-			fieldType = getAstArrayType(s)
-		case *ast.SelectorExpr:
-			fieldType = getAstSelectorExpr(s)
-		case *ast.Ident:
-			fieldType = getAstIdent(s)
-		}
+		fieldType := getUndeterminedType(item)
 
 		sugar.Debugf("        Type: %s", fieldType)
 
@@ -105,6 +92,46 @@ func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
 		structMap[n.Name.Name].Properties[fieldName] = fieldType
 	}
 	return VisitorFunc(FindTypes)
+}
+
+func getUndeterminedType(fi *ast.Field) (rv string) {
+	switch s := fi.Type.(type) {
+	case *ast.StarExpr:
+		rv = getAstStarExpr(s)
+	case *ast.MapType:
+		rv = getAstMapType(s)
+	case *ast.ArrayType:
+		rv = getAstArrayType(s)
+	case *ast.SelectorExpr:
+		rv = getAstSelectorExpr(s)
+	case *ast.FuncType:
+		rv = getAstFuncType(s)
+	case *ast.Ident:
+		rv = getAstIdent(s)
+	}
+	return
+}
+
+func getAstFuncType(s *ast.FuncType) (rv string) {
+	var tfn []string
+	var trn []string
+
+	// get parameters
+	for _, p := range s.Params.List {
+		tfn = append(tfn, getUndeterminedType(p))
+	}
+
+	// get return values
+	for _, r := range s.Results.List {
+		trn = append(trn, getUndeterminedType(r))
+	}
+
+	fn := strings.Join(tfn, " ")
+	rn := strings.Join(trn, " ")
+
+	rv = "func(" + fn + ")" + "(" + rn + ")"
+
+	return
 }
 
 func getAstStarExpr(s *ast.StarExpr) (rv string) {
@@ -130,6 +157,16 @@ func getAstMapType(s *ast.MapType) (rv string) {
 
 func getAstArrayType(s *ast.ArrayType) (rv string) {
 	switch at := s.Elt.(type) {
+	case *ast.StarExpr:
+		rv = getAstStarExpr(at)
+	case *ast.MapType:
+		rv = getAstMapType(at)
+	case *ast.ArrayType:
+		rv = getAstArrayType(at)
+	case *ast.SelectorExpr:
+		rv = getAstSelectorExpr(at)
+	case *ast.FuncType:
+		rv = getAstFuncType(at)
 	case *ast.Ident:
 		rv = getAstIdent(at)
 	}

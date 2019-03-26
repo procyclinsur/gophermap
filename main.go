@@ -95,13 +95,6 @@ func main() {
 	defer logger.Sync()
 	sugar = logger.Sugar()
 
-	//sugar.Infow("failed to fetch URL",
-	// Structured context as loosely typed key-value pairs.
-	//	"url", "http://example.com",
-	//	"attempt", 3,
-	//	"backoff", time.Second,
-	//)
-
 	logger.Info("Parsing project directory for golang files...")
 	if err := getPathList(opts.Path, visit); err != nil {
 		sugar.Errorf("filepath.Walk() returned %v\n", err)
