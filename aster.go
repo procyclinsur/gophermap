@@ -106,9 +106,30 @@ func getUndeterminedType(fi *ast.Field) (rv string) {
 		rv = getAstSelectorExpr(s)
 	case *ast.FuncType:
 		rv = getAstFuncType(s)
+	case *ast.ChanType:
+		rv = getAstChanType(s)
 	case *ast.Ident:
 		rv = getAstIdent(s)
 	}
+	return
+}
+
+func getAstChanType(s *ast.ChanType) (rv string) {
+	var tv string
+
+	switch se := s.Value.(type) {
+	case *ast.SelectorExpr:
+		tv = getAstSelectorExpr(se)
+	}
+
+	if s.Dir == ast.SEND {
+		rv = "chan" + "<-" + tv
+	} else if s.Dir == ast.RECV {
+		panic("Check AST Document Dir was not 1")
+	} else {
+		logger.Fatal("Unknown Error Invalid Chan Type")
+	}
+
 	return
 }
 
@@ -138,6 +159,8 @@ func getAstStarExpr(s *ast.StarExpr) (rv string) {
 	switch se := s.X.(type) {
 	case *ast.SelectorExpr:
 		rv = "*" + getAstSelectorExpr(se)
+	case *ast.Ident:
+		rv = "*" + getAstIdent(se)
 	}
 	return
 }
@@ -151,6 +174,10 @@ func getAstMapType(s *ast.MapType) (rv string) {
 	switch mtv := s.Value.(type) {
 	case *ast.Ident:
 		rv = "map[" + mKey + "]" + getAstIdent(mtv)
+	case *ast.ArrayType:
+		rv = "map[" + mKey + "]" + getAstArrayType(mtv)
+	case *ast.SelectorExpr:
+		rv = "map[" + mKey + "]" + getAstSelectorExpr(mtv)
 	}
 	return
 }
@@ -158,17 +185,17 @@ func getAstMapType(s *ast.MapType) (rv string) {
 func getAstArrayType(s *ast.ArrayType) (rv string) {
 	switch at := s.Elt.(type) {
 	case *ast.StarExpr:
-		rv = getAstStarExpr(at)
+		rv = "[]" + getAstStarExpr(at)
 	case *ast.MapType:
-		rv = getAstMapType(at)
+		rv = "[]" + getAstMapType(at)
 	case *ast.ArrayType:
-		rv = getAstArrayType(at)
+		rv = "[]" + getAstArrayType(at)
 	case *ast.SelectorExpr:
-		rv = getAstSelectorExpr(at)
+		rv = "[]" + getAstSelectorExpr(at)
 	case *ast.FuncType:
-		rv = getAstFuncType(at)
+		rv = "[]" + getAstFuncType(at)
 	case *ast.Ident:
-		rv = getAstIdent(at)
+		rv = "[]" + getAstIdent(at)
 	}
 	return
 }

@@ -19,6 +19,7 @@ Golang Struct Relation Diagram
 - [x] refactor processing for aster.go case statements to 'fieldType = someFunction(inputs)' `alpha-0.1.2`
 - [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
 - [ ] fix getAstMapType to support all types for mtv `alpha-0.1.2`
+- [ ] fix aster.go to allow support for directly nested structs `alpha-0.1.?`
 
 ## Release Requirements
 
