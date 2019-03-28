@@ -20,6 +20,7 @@ Golang Struct Relation Diagram
 - [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
 - [ ] fix getAstMapType to support all types for mtv `alpha-0.1.2`
 - [ ] fix aster.go to allow support for directly nested structs `alpha-0.1.?`
+- [x] add \*ast.ChanType to aster.go `alpha-0.1.2`
 
 ## Release Requirements
 
