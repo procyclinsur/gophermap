@@ -67,35 +67,14 @@ func walkTypeSpec(n *ast.TypeSpec) ast.Visitor {
 }
 
 func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
-	structMap[n.Name.Name] = StructDef{
-		n.Name.Name,
-		map[string]string{},
-		[]string{},
-	}
-	for _, item := range v.Fields.List {
-		var fieldName string
-
-		if item.Names != nil {
-			fieldName = item.Names[0].Name
-		}
-
-		sugar.Debugf("    Field: %s", fieldName)
-
-		fieldType := getUndeterminedType(item)
-
-		sugar.Debugf("        Type: %s", fieldType)
-
-		if fieldName == "" {
-			fieldName = fieldType
-		}
-
-		structMap[n.Name.Name].Properties[fieldName] = fieldType
-	}
+	recordAstStructType(n.Name.Name, v)
 	return VisitorFunc(FindTypes)
 }
 
-func getUndeterminedType(fi *ast.Field) (rv string) {
+func getUndeterminedType(fn string, fi *ast.Field) (rv string) {
 	switch s := fi.Type.(type) {
+	case *ast.StructType:
+		rv = recordAstStructType(fn, s)
 	case *ast.StarExpr:
 		rv = getAstStarExpr(s)
 	case *ast.MapType:
@@ -112,6 +91,34 @@ func getUndeterminedType(fi *ast.Field) (rv string) {
 		rv = getAstIdent(s)
 	}
 	return
+}
+
+func recordAstStructType(fn string, s *ast.StructType) (rv string) {
+	structMap[fn] = StructDef{
+		fn,
+		map[string]string{},
+		[]string{},
+	}
+	for _, item := range s.Fields.List {
+		var fieldName string
+
+		if item.Names != nil {
+			fieldName = item.Names[0].Name
+		}
+
+		sugar.Debugf("    Field: %s", fieldName)
+
+		fieldType := getUndeterminedType(fieldName, item)
+
+		sugar.Debugf("        Type: %s", fieldType)
+
+		if fieldName == "" {
+			fieldName = fieldType
+		}
+
+		structMap[fn].Properties[fieldName] = fieldType
+	}
+	return "struct"
 }
 
 func getAstChanType(s *ast.ChanType) (rv string) {
@@ -139,12 +146,12 @@ func getAstFuncType(s *ast.FuncType) (rv string) {
 
 	// get parameters
 	for _, p := range s.Params.List {
-		tfn = append(tfn, getUndeterminedType(p))
+		tfn = append(tfn, getUndeterminedType("func", p))
 	}
 
 	// get return values
 	for _, r := range s.Results.List {
-		trn = append(trn, getUndeterminedType(r))
+		trn = append(trn, getUndeterminedType("func", r))
 	}
 
 	fn := strings.Join(tfn, " ")
