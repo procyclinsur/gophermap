@@ -28,6 +28,18 @@ type StructDef struct {
 //VisitorFunc function v1.0
 type VisitorFunc func(n ast.Node) ast.Visitor
 
+func appendTypeList(t string) {
+	var exists int
+	for _, item := range typeList {
+		if item == t {
+			exists = 1
+		}
+	}
+	if exists != 1 {
+		typeList = append(typeList, t)
+	}
+}
+
 //Visit function v1.0
 func (f VisitorFunc) Visit(n ast.Node) ast.Visitor {
 	return f(n)
@@ -57,7 +69,7 @@ func FindTypes(n ast.Node) ast.Visitor {
 }
 
 func walkTypeSpec(n *ast.TypeSpec) ast.Visitor {
-	typeList = append(typeList, n.Name.Name)
+	appendTypeList(n.Name.Name)
 	switch v := n.Type.(type) {
 	case *ast.StructType:
 		sugar.Debugf("Struct: %s", n.Name.Name)
@@ -99,6 +111,9 @@ func recordAstStructType(fn string, s *ast.StructType) (rv string) {
 		map[string]string{},
 		[]string{},
 	}
+
+	appendTypeList(fn)
+
 	for _, item := range s.Fields.List {
 		var fieldName string
 
@@ -118,7 +133,7 @@ func recordAstStructType(fn string, s *ast.StructType) (rv string) {
 
 		structMap[fn].Properties[fieldName] = fieldType
 	}
-	return "struct"
+	return fn
 }
 
 func getAstChanType(s *ast.ChanType) (rv string) {
