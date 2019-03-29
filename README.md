@@ -12,14 +12,14 @@ Golang Struct Relation Diagram
     - [ ] output to config file (graphviz?) `alpha-0.1.?`
         - [ ] decide on graphing library
     - [ ] structs from other locations `alpha-0.1.?`
-    - [ ] allow external non StarExpr types to be recognized `alpha-0.1.2`
+    - [x] allow external non StarExpr types to be recognized `alpha-0.1.2`
     - [x] implement zap logger `alpha-0.1.2`
 - [ ] use config to genereate graph  `beta-0.?.?`
 - [x] add \*ast.FuncType and \*ast.SelectorExpr to aster.go `alpha-0.1.2`
 - [x] refactor processing for aster.go case statements to 'fieldType = someFunction(inputs)' `alpha-0.1.2`
 - [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
 - [ ] fix getAstMapType to support all types for mtv `alpha-0.1.2`
-- [ ] fix aster.go to allow support for directly nested structs `alpha-0.1.?`
+- [x] fix aster.go to allow support for directly nested structs `alpha-0.1.2`
 - [x] add \*ast.ChanType to aster.go `alpha-0.1.2`
 
 ## Release Requirements
