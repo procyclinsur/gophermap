@@ -4,29 +4,29 @@ Golang Struct Relation Diagram
 ## To-Do
 
 - [ ] walk ast doc for structs in files from dir and create config file `alpha-0.?.?`
-    - [ ] create dry-run flag (generate txt output)
-        - [ ] refine text output `alpha-0.1.?`
-        - [ ] create flag `alpha-0.1.?`
-        - [ ] create logic for flag `alpha-0.1.?`
+    - [ ] create dry-run flag (generate txt output) `alpha-0.1.3`
+        - [ ] refine text output `alpha-0.1.3`
+        - [ ] create flag `alpha-0.1.3`
+        - [ ] create logic for flag `alpha-0.1.3``
     - [ ] based on package type `alpha-0.1.?`
-    - [ ] output to config file (graphviz?) `alpha-0.1.?`
-        - [ ] decide on graphing library
+    - [ ] output to config file (graphviz) `alpha-0.1.3`
+        - [ ] decide on graphing library `alpha-0.1.3`
     - [ ] structs from other locations `alpha-0.1.?`
     - [x] allow external non StarExpr types to be recognized `alpha-0.1.2`
     - [x] implement zap logger `alpha-0.1.2`
-- [ ] use config to genereate graph  `beta-0.?.?`
+- [ ] use config to genereate graph  `alpha-0.1.?`
 - [x] add \*ast.FuncType and \*ast.SelectorExpr to aster.go `alpha-0.1.2`
 - [x] refactor processing for aster.go case statements to 'fieldType = someFunction(inputs)' `alpha-0.1.2`
 - [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
-- [ ] fix getAstMapType to support all types for mtv `alpha-0.1.2`
+- [ ] finish fixing getAstMapType to support all types for mtv `alpha-0.1.?`
 - [x] fix aster.go to allow support for directly nested structs `alpha-0.1.2`
 - [x] add \*ast.ChanType to aster.go `alpha-0.1.2`
 
 ## Release Requirements
 
 - alpha-0.1.2:
-    - [ ] No bugs in running code
-    - [ ] Above labeled to-do's finished
+    - [x] No bugs in running code
+    - [x] Above labeled to-do's finished
 
 ## Build
 
