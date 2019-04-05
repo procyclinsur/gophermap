@@ -112,7 +112,7 @@ func main() {
 		rl := relationMapper(sm, tl)
 		logger.Info("RELATIONSHIPS: ")
 		logger.Debug(spew.Sdump(rl))
-		_ = rl
+		buildTemplate(sm, rl)
 	} else {
 		logger.Info("AST Debug Enabled!")
 		debugParseDirFiles(fset)

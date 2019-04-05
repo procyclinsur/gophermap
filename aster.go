@@ -145,7 +145,7 @@ func getAstChanType(s *ast.ChanType) (rv string) {
 	}
 
 	if s.Dir == ast.SEND {
-		rv = "chan" + "<-" + tv
+		rv = "chan" + "&lt-" + tv
 	} else if s.Dir == ast.RECV {
 		panic("Check AST Document Dir was not 1")
 	} else {

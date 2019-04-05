@@ -43,7 +43,7 @@ func apptInTypeList(p string, tl TypeList) (child string, ok bool) {
 		if ap == aps {
 			child = ps
 		} else if string(ap[0]) == "*" {
-			child = p
+			child = "\"" + p + "\""
 		}
 		if child != "" {
 			ok = true

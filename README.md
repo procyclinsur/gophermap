@@ -11,6 +11,10 @@ Golang Struct Relation Diagram
     - [ ] based on package type `alpha-0.1.?`
     - [ ] output to config file (graphviz) `alpha-0.1.3`
         - [ ] decide on graphing library `alpha-0.1.3`
+        - [ ] fix empty structs
+        - [x] fix "chan<-" line ~168
+        - [ ] fix possible type issues in relations
+        - [ ] fix remove asterisk from relation list items
     - [ ] structs from other locations `alpha-0.1.?`
     - [x] allow external non StarExpr types to be recognized `alpha-0.1.2`
     - [x] implement zap logger `alpha-0.1.2`
