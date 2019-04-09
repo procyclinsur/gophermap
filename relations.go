@@ -12,20 +12,24 @@ type Relation struct {
 	//Containing Struct
 	Parent string
 	//Contained Structs
-	Children []string
+	Children map[string]string
 }
 
-func relationMapper(sm StructMap, tl TypeList) RelationList {
+func relationMapper(sm StructMap, tl TypesMap) RelationList {
 	var relationList = RelationList{}
 	for ps := range sm {
-		var ptList []string
+		ptList := map[string]string{}
 		sugar.Debugf("Parent Struct: %s", ps)
 		for ppn, ppt := range sm[ps].Properties {
 			sugar.Debugf("    Checking Property: %s", ppn)
 			sugar.Debugf("        Type: %s", ppt)
-			if child, ok := apptInTypeList(ppt, tl); ok != false {
+			cn, ct, ok := apptInTypesMap(ppt, tl)
+			//sugar.Debugf("CN: %s", cn)
+			//sugar.Debugf("CT: %s", ct)
+			//sugar.Debugf("OK: %s", ok)
+			if ok != false {
 				sugar.Debugf("            Type '%s' matches requirement adding to list", ppt)
-				ptList = append(ptList, child)
+				ptList[cn] = ct
 			}
 		}
 		relationList = append(relationList, Relation{
@@ -36,21 +40,22 @@ func relationMapper(sm StructMap, tl TypeList) RelationList {
 	return relationList
 }
 
-func apptInTypeList(p string, tl TypeList) (child string, ok bool) {
-	for _, ps := range tl {
+func apptInTypesMap(p string, tl TypesMap) (cn, ct string, ok bool) {
+	for tn, tt := range tl {
 		ap := strings.ToLower(p)
-		aps := strings.ToLower(ps)
-		if ap == aps {
-			child = ps
-		} else if string(ap[0]) == "*" {
-			child = p
+		if string(ap[0]) == "*" {
+			ap = ap[1:]
 		}
-		if child != "" {
+		atn := strings.ToLower(tn)
+		if ap == atn {
+			cn, ct = tn, tt
+		}
+		if cn != "" {
 			ok = true
 			return
 		}
 	}
-	child = ""
+	cn, ct = "", ""
 	ok = false
 	return
 }

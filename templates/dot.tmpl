@@ -1,0 +1,27 @@
+digraph G {
+    node [shape=none, margin=0]
+    edge [arrowhead=crow, arrowtail=none, dir=both]
+    labelloc="t";
+    label="My Diagram";
+    {{- with .StructMap }}
+      {{- range . }}
+    {{ .Name }} [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td bgcolor="lightgrey">{{ .Name }}: Struct</td></tr>
+            {{- with .Properties }}
+              {{- range $index, $element := . }}
+            <tr><td bgcolor="lightblue">{{ $index }}: {{ $element }}</td></tr>
+              {{- end }}
+            {{- end }}
+        </table>
+    >]
+      {{- end }}
+    {{- end }}
+    {{- with .RelationList }}
+      {{- range . }}{{ $parent := .Parent }}
+        {{- range $index, $element := .Children }}
+    {{ $parent }}->"{{ $index }}";
+        {{- end}}
+      {{- end }}
+    {{- end }}
+}

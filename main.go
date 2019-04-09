@@ -112,14 +112,14 @@ func main() {
 		rl := relationMapper(sm, tl)
 		logger.Info("RELATIONSHIPS: ")
 		logger.Debug(spew.Sdump(rl))
-		_ = rl
+		buildTemplate(sm, rl)
 	} else {
 		logger.Info("AST Debug Enabled!")
 		debugParseDirFiles(fset)
 	}
 }
 
-func parseDirFiles(f *token.FileSet) (TypeList, StructMap) {
+func parseDirFiles(f *token.FileSet) (TypesMap, StructMap) {
 	for _, pathVar := range pathList {
 		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
