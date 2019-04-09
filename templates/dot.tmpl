@@ -7,7 +7,7 @@ digraph G {
       {{- range . }}
     {{ .Name }} [label=<
         <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-            <tr><td bgcolor="lightgrey">{{ .Name }}</td></tr>
+            <tr><td bgcolor="lightgrey">{{ .Name }}: Struct</td></tr>
             {{- with .Properties }}
               {{- range $index, $element := . }}
             <tr><td bgcolor="lightblue">{{ $index }}: {{ $element }}</td></tr>
@@ -19,8 +19,8 @@ digraph G {
     {{- end }}
     {{- with .RelationList }}
       {{- range . }}{{ $parent := .Parent }}
-        {{- range .Children }}
-    {{ $parent }}->{{ . }};
+        {{- range $index, $element := .Children }}
+    {{ $parent }}->"{{ $index }}";
         {{- end}}
       {{- end }}
     {{- end }}

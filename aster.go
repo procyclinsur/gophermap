@@ -7,10 +7,10 @@ import (
 )
 
 var structMap = StructMap{}
-var typeList = TypeList{}
+var typesMap = TypesMap{}
 
-//TypeList v1.0
-type TypeList []string
+//TypesMap v1.0
+type TypesMap map[string]string
 
 //StructMap v1.0
 type StructMap map[string]StructDef
@@ -28,15 +28,15 @@ type StructDef struct {
 //VisitorFunc function v1.0
 type VisitorFunc func(n ast.Node) ast.Visitor
 
-func appendTypeList(t string) {
+func appendTypesMap(tn string, tt string) {
 	var exists int
-	for _, item := range typeList {
-		if item == t {
+	for key := range typesMap {
+		if key == tn {
 			exists = 1
 		}
 	}
 	if exists != 1 {
-		typeList = append(typeList, t)
+		typesMap[tn] = tt
 	}
 }
 
@@ -45,8 +45,8 @@ func (f VisitorFunc) Visit(n ast.Node) ast.Visitor {
 	return f(n)
 }
 
-func getWalkOutput() (tl TypeList, sm StructMap) {
-	tl = typeList
+func getWalkOutput() (tl TypesMap, sm StructMap) {
+	tl = typesMap
 	sm = structMap
 	return
 }
@@ -69,18 +69,20 @@ func FindTypes(n ast.Node) ast.Visitor {
 }
 
 func walkTypeSpec(n *ast.TypeSpec) ast.Visitor {
-	appendTypeList(n.Name.Name)
 	switch v := n.Type.(type) {
 	case *ast.StructType:
 		sugar.Debugf("Struct: %s", n.Name.Name)
-		return walkStructSpec(n, v)
+		walkStructSpec(n, v)
+	case *ast.InterfaceType:
+		sugar.Debugf("Interface: %s", n.Name.Name)
+		appendTypesMap(n.Name.Name, "Interface")
 	}
-	return nil
+	appendTypesMap(n.Name.Name, "Interface")
+	return VisitorFunc(FindTypes)
 }
 
-func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) ast.Visitor {
+func walkStructSpec(n *ast.TypeSpec, v *ast.StructType) {
 	recordAstStructType(n.Name.Name, v)
-	return VisitorFunc(FindTypes)
 }
 
 func getUndeterminedType(fn string, fi *ast.Field) (rv string) {
@@ -112,7 +114,7 @@ func recordAstStructType(fn string, s *ast.StructType) (rv string) {
 		[]string{},
 	}
 
-	appendTypeList(fn)
+	appendTypesMap(fn, "Struct")
 
 	for _, item := range s.Fields.List {
 		var fieldName string

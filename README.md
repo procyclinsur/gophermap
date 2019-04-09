@@ -11,26 +11,24 @@ Golang Struct Relation Diagram
     - [ ] based on package type `alpha-0.1.?`
     - [ ] output to config file (graphviz) `alpha-0.1.3`
         - [ ] decide on graphing library `alpha-0.1.3`
-        - [ ] fix empty structs
-        - [x] fix "chan<-" line ~168
-        - [ ] fix possible type issues in relations
-        - [ ] fix remove asterisk from relation list items
+        - [ ] fix empty structs `alpha-0.1.3`
+        - [x] fix "chan<-" line ~168 `alpha-0.1.3`
+        - [ ] fix possible type issues in relations `alpha-0.1.3`
+        - [x] fix remove asterisk from relation list items `alpha-0.1.3`
     - [ ] structs from other locations `alpha-0.1.?`
-    - [x] allow external non StarExpr types to be recognized `alpha-0.1.2`
-    - [x] implement zap logger `alpha-0.1.2`
 - [ ] use config to genereate graph  `alpha-0.1.?`
-- [x] add \*ast.FuncType and \*ast.SelectorExpr to aster.go `alpha-0.1.2`
-- [x] refactor processing for aster.go case statements to 'fieldType = someFunction(inputs)' `alpha-0.1.2`
-- [x] create aster.go func getUndeterminedType to reduce code redundancy `alpha-0.1.2`
 - [ ] finish fixing getAstMapType to support all types for mtv `alpha-0.1.?`
-- [x] fix aster.go to allow support for directly nested structs `alpha-0.1.2`
-- [x] add \*ast.ChanType to aster.go `alpha-0.1.2`
+- [x] fix type list -> type map `alpha-0.1.3`
+- [ ] fix type map processing per type and default in aster.go `alpha-0.1.3`
+- [ ] fix template object labeling [ struct, interface, etc. ] `alpha-0.1.3`
+- [ ] add comments to dot.tmpl `alpha-0.1.3`
+
 
 ## Release Requirements
 
-- alpha-0.1.2:
-    - [x] No bugs in running code
-    - [x] Above labeled to-do's finished
+- alpha-0.1.3:
+    - [ ] No bugs in running code
+    - [ ] Above labeled to-do's finished
 
 ## Build
 

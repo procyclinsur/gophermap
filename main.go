@@ -119,7 +119,7 @@ func main() {
 	}
 }
 
-func parseDirFiles(f *token.FileSet) (TypeList, StructMap) {
+func parseDirFiles(f *token.FileSet) (TypesMap, StructMap) {
 	for _, pathVar := range pathList {
 		prse, err := parser.ParseDir(f, pathVar, fileFilter, 0)
 		if err != nil {
